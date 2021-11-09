@@ -1,5 +1,57 @@
 version: 2.1
+parameters:
+  version:
+    type: string
+    description: "The version to update the cask to install"
+    default: ""
+  AMD64Sha:
+    type: string
+    description: "The sha-256 sum for darwin systems on AMD64 architecture"
+    default: ""
+  ARM64Sha:
+    type: string
+    description: "The sha-256 sum for the darwin systems on ARM64 (M1) architecture"
+    default: ""
+  branchName:
+    type: string
+    description: "the name of the branch to create for the cask update"
+    default: ""
+  APITriggered:
+    type: boolean
+    description: "Flag for if workflow was triggered via an API call"
+    default: false
+
+workflows:
+  testing:
+    - test
+  launch-agent-cask:
+    - update
 
 
-workflow:
-  
+jobs:
+  update:
+    docker:
+      image: cimg/base:stable-20.04
+    steps:
+      - checkout
+      - run:
+        name: Create Branch
+        command: |
+          git checkout -b <<parameters.branchName>>
+      - run:
+        name: Update Launch Agent Cask
+        command: |
+          sed -i 's/VERSION/<<parameters.version>>/g' templates/launch-agent.rb
+          sed -i 's/AMD64SHA/<<parameters.AMD64Sha>>/g' templates/launch-agent.rb
+          sed -i 's/ARM64SHA/<<parameters.ARM64Sha>>/g' templates/launch-agent.rb
+          cp templates/launch-agent.rb Casks/circleci-launch-agent.rb
+      - run:
+        name: Commit and Push Branch
+        command: |
+          git add Casks/circleci-launch-agent.rb
+          git commit -m "Update launch-agent cask to version <<parameters.version>>"
+          git push -u <<parameters.branchName>>
+      - run:
+        name: Open Pull Request
+        command: |
+          git request-pull main ./
