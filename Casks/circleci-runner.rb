@@ -24,7 +24,6 @@ cask "circleci-runner" do
 
 
   postflight do
-
     if not File.exists?(configDir)
     system_command "mkdir", 
       args: ["-p", "#{configDir}"]
@@ -113,13 +112,14 @@ Config: #{Dir.home}/Library/Preferences/com.circleci.runner/config.yaml
 Documentation: https://circleci.com/docs/runner-overview/
 CircleCI Self-Hosted Runner Changelog: https://circleci.com/changelog/self-hosted-runner/
 Before Running:
-  To check application notarization run `spctl -a -vvv -t install /opt/homebrew/bin/circleci-runner`
+  To check application notarization run `$ spctl -a -vvv -t install /opt/homebrew/bin/circleci-runner`
 
-  To accept the notarization headlessly run `sudo xattr -r -d com.apple.quarantine /opt/homebrew/bin/circleci-runner`
+  To accept the notarization headlessly run `$ sudo xattr -r -d com.apple.quarantine /opt/homebrew/bin/circleci-runner`
 
   Update the configration with your self-hosted runner token and runner name before starting
 
-  Enable and Start LaunchAgent with `launchctl enable #{Dir.home}/Library/LaunchAgents/com.circleci.runner.plist`"
+  Enable and Start the CircleCI Runner LaunchAgent with `$ launchctl enable #{Dir.home}/Library/LaunchAgents/com.circleci.runner.plist`
+  Start CircleCI Runner manually with `$ circleci-runner machine --config #{Dir.home}/Library/Preferences/com.circleci.runner/config.yaml`"
   end
 
   zap trash:[
@@ -132,6 +132,4 @@ Before Running:
   ]
 
   uninstall launchctl: "com.circleci.runner"
-    
-
 end
