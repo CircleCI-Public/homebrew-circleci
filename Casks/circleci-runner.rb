@@ -3,13 +3,16 @@ cask "circleci-runner" do
   name "circleci-runner"
   desc "The self-hosted runner agent for CircleCI"
   homepage "https://circleci.com/docs/2.0/runner-overview/"
+
+  intelSHA = "43ab488229917e8350b2bc6a7a660fb48a44e25d2e42e584fb18707ce49e8528"
+  armSHA = "01baaa7f66e3683965c80a01d042ba9f7bdbc46cfbcf3e7df3dcbe15c650310f"
   
   if Hardware::CPU.intel? 
-    sha256 "43ab488229917e8350b2bc6a7a660fb48a44e25d2e42e584fb18707ce49e8528"
+    sha256 "#{intelSHA}"
     url "https://circleci-binary-releases.s3.amazonaws.com/circleci-runner/#{version}/circleci-runner_darwin_amd64.tar.gz"
     binary "circleci-runner"
   else
-    sha256 "01baaa7f66e3683965c80a01d042ba9f7bdbc46cfbcf3e7df3dcbe15c650310f"
+    sha256 "#{armSHA}"
     url "https://circleci-binary-releases.s3.amazonaws.com/circleci-runner/#{version}/circleci-runner_darwin_arm64.tar.gz"
     binary "circleci-runner"
   end
@@ -31,11 +34,11 @@ cask "circleci-runner" do
 
     if not File.exists?(configFile)
       conf = "runner:
-  name: <<RUNNER_NAME>>
+  name: [[RUNNER_NAME]]
   working_directory: \"#{workingDir}\"
   cleanup_working_directory: true
 api:
-  auth_token: <<RESOURCE_CLASS_TOKEN>>"
+  auth_token: [[RESOURCE_CLASS_TOKEN]]"
 
       File.open(configFile, "w"){|f| f.write "#{conf}"}
     end
