@@ -1,7 +1,7 @@
 version: 2.1
 
 parameters:
-  run_smoketest_workflow:
+  run_smoketest:
     default: false
     type: boolean
 
@@ -9,14 +9,14 @@ workflows:
   version: 2
   build:
     when:
-      not: << pipeline.parameters.run_smoketest_workflow >>
+      not: << pipeline.parameters.run_smoketest >>
     jobs:
       - install_and_run:
           context: 
             - runner-brew-test
 
   smoketest:
-    when: << pipeline.parameters.run_smoketest_workflow >>
+    when: << pipeline.parameters.run_smoketest >>
     jobs:
       - smoketest
 
@@ -90,4 +90,3 @@ jobs:
     resource_class: circleci/brew-test-runner
     steps:
       - run: echo "Hello world, I'm running on a runner installed from a brew package"
-
