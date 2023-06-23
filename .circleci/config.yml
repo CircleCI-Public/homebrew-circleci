@@ -1,53 +1,36 @@
-version: 2.0
+version: 2.1
+
+parameters:
+  run_smoketest:
+    default: false
+    type: boolean
+
 workflows:
+  version: 2
   build:
+    when:
+      not: << pipeline.parameters.run_smoketest >>
     jobs:
       - install_and_run:
           context: 
             - runner-brew-test
 
+  smoketest:
+    when: << pipeline.parameters.run_smoketest >>
+    jobs:
+      - smoketest
+
+
 jobs:
   install_and_run:
     macos:
       xcode: 14.3.1
+    resource_class: macos.m1.medium.gen1
     steps:
-      - checkout
-      - run:
-          name: Install New Updated Package
-          command: |
-            brew install --build-from-source Casks/circleci-runner.rb
-            sed -i circleci-runner.rb.bk "s/<<RESOURCE_CLASS_TOKEN>>/$CI_RUNNER_TOKEN/g" ~/Library/Preferences/com.circleci.runner/config.yaml
-            sed -i circleci-runner.rb.bk "s/<<RUNNER_NAME>>/CI-Brew-Package-Test/g" ~/Library/Preferences/com.circleci.runner/config.yaml
-      - run:
-          name: Verify Signature and Allow Passed Gatekeeper
-          command: |
-            spctl -a -vvv -t install /opt/homebrew/bin/circleci-runner
-            sudo xattr -r -d com.apple.quarantine /opt/homebrew/bin/circleci-runner
-      - run:
-          name: Start Runner
-          command: |
-            launchctl load ~/Library/LaunchAgents/com.circleci.runner.plist
-            sleep 2
-            fgrep -n "starting agent" ~/Library/Logs/com.circleci.runner/runner.log
-      - run:
-          name: Trigger and Watch Smoke Test Job
-          command: |
-            curl -X POST --header "Content-Type: application/json" -H "Circle-Token: $CI_API_TOKEN" https://circleci.com/api/v1.1/project/gh/CircleCI-Public/homebrew-circleci/tree/smoketest -o job_details.json
-            export JOB_NUM=$(cat job_details.json | jq '.build_num')
-            echo "waiting for smoke test job to complete"
-            checkResult(){
-              curl --request GET --url https://circleci.com/api/v2/project/gh/CircleCI-Public/homebrew-circleci/job/$JOB_NUM --header 'Circle-Token: $CI_API_TOKEN' -o smoke_test_results.json
-              export RESULT=$(cat smoke_test_results.json | jq '.status')
-            }
+      - run: echo "this is a place holder to get the smoketest job setup"  
 
-            for i in {1..3}; do
-              export RESULT=$(checkResult)
-              if [ "$RESULT" = "success" ]; then
-                exit 0
-              fi
-              sleep 5
-            done
-
-
-
-
+  smoketest:
+    machine: true
+    resource_class: circleci/brew-test-runner
+    steps:
+      - run: echo "Hello world, I'm running on a runner installed from a brew package"
