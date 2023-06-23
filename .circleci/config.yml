@@ -25,6 +25,7 @@ jobs:
   install_and_run:
     macos:
       xcode: 14.3.1
+    resource_class: macos.m1.medium.gen1
     steps:
       - run: echo "this is a place holder to get the smoketest job setup"  
 
