@@ -1,11 +1,11 @@
 cask "circleci-runner" do
-  version "3.0.10"
+  version "3.0.11"
   name "circleci-runner"
   desc "The self-hosted runner agent for CircleCI"
   homepage "https://circleci.com/docs/2.0/runner-overview/"
 
-  intelSHA = "43ab488229917e8350b2bc6a7a660fb48a44e25d2e42e584fb18707ce49e8528"
-  armSHA = "01baaa7f66e3683965c80a01d042ba9f7bdbc46cfbcf3e7df3dcbe15c650310f"
+  intelSHA = "144abf3e347ec47c3c87aa0122a50a9e07abc7056bd6d152c9e309c69b1e92ef"
+  armSHA = "97ac9103946aaad1897528e8ceffe484d7092e3aedf55026d3f2d29413e185a7"
   
   if Hardware::CPU.intel? 
     sha256 "#{intelSHA}"
