@@ -20,14 +20,71 @@ workflows:
     jobs:
       - smoketest
 
-
 jobs:
   install_and_run:
     macos:
       xcode: 14.3.1
     resource_class: macos.m1.medium.gen1
     steps:
-      - run: echo "this is a place holder to get the smoketest job setup"  
+      - checkout
+      - run:
+          name: Install New Updated Package
+          command: |
+            brew install --build-from-source Casks/circleci-runner.rb
+            sed -i circleci-runner.rb.bk "s/\[\[RESOURCE_CLASS_TOKEN\]\]/$CI_RUNNER_TOKEN/g" ~/Library/Preferences/com.circleci.runner/config.yaml
+            sed -i circleci-runner.rb.bk "s/\[\[RUNNER_NAME\]\]/CI-Brew-Package-Test/g" ~/Library/Preferences/com.circleci.runner/config.yaml
+      - run:
+          name: Verify Signature and Allow Passed Gatekeeper
+          command: |
+            spctl -a -vvv -t install /opt/homebrew/bin/circleci-runner
+            sudo xattr -r -d com.apple.quarantine /opt/homebrew/bin/circleci-runner
+      - run:
+          name: Start Runner
+          command: |
+            launchctl load ~/Library/LaunchAgents/com.circleci.runner.plist
+            sleep 2
+            fgrep -n "starting agent" ~/Library/Logs/com.circleci.runner/runner.log
+      - run:
+          name: Trigger and Watch Smoke Test Job
+          command: |
+            curl --request POST --url https://circleci.com/api/v2/project/gh/CircleCI-Public/homebrew-circleci/pipeline --header "Circle-Token: $CI_API_TOKEN" --header 'content-type: application/json' \
+              --data '{"parameters":{"run_smoketest":true}}' -o pipeline_data.json --silent --write-out '%{http_code}' > pipeline_status_code.txt
+            if [ ! "$(cat pipeline_status_code.txt)" = "201" ]; then
+              echo "Failed to launch pipeline $(cat pipeline_data.json)"
+              exit 1
+            fi
+
+            export PIPELINE_ID=$(cat pipeline_data.json | jq '.id' | cut -d \" -f 2)
+            echo "Running smoketest Pipeline: $PIPELINE_ID"
+            sleep 2 # give time for the CI to flow
+
+            REQ_STATUS=$(curl --request GET --silent --write-out '%{http_code}' --url "https://circleci.com/api/v2/pipeline/$PIPELINE_ID/workflow" --header "Circle-Token: $CI_API_TOKEN" -o pipeline_workflows.json)
+            if [ "$REQ_STATUS" = "200" ]; then
+              export WORKFLOW_ID=$(cat pipeline_workflows.json | jq '.items[0].id' | cut -d \" -f 2)
+            else
+              echo "Failed to lookup workflow for pipeline: $(cat pipeline_workflows.json)"
+              exit 1
+            fi
+
+            echo "Workflow ID: $WORKFLOW_ID"
+
+            checkResult(){
+              export resp=$(curl --request GET --silent --url "https://circleci.com/api/v2/workflow/$WORKFLOW_ID" --header "Circle-Token: $CI_API_TOKEN" -o workflow_status.json --write-out '%{http_code}')
+              if [ "$resp" = "200" ]; then
+                echo $(cat workflow_status.json | jq '.status')
+              fi
+            }
+
+            for i in {1..5}; do
+              export RESULT=$(checkResult)
+              echo "Check $i status: $RESULT"
+              if [ "$RESULT" = "\"success\"" ]; then
+                exit 0
+              fi
+              sleep 5
+            done
+            echo "Unable to check workflow status"
+            exit 1
 
   smoketest:
     machine: true
