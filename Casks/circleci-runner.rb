@@ -1,5 +1,5 @@
 cask "circleci-runner" do
-  version "3.0.11"
+  version "3.0.10"
   name "circleci-runner"
   desc "The self-hosted runner agent for CircleCI"
   homepage "https://circleci.com/docs/2.0/runner-overview/"
