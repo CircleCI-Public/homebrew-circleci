@@ -121,7 +121,7 @@ Before Running:
 
   Update the configration with your self-hosted runner token and runner name before starting
 
-  Enable and Start the CircleCI Runner LaunchAgent with `$ launchctl enable #{Dir.home}/Library/LaunchAgents/com.circleci.runner.plist`
+  Enable and Start the CircleCI Runner LaunchAgent with `$ launchctl load #{Dir.home}/Library/LaunchAgents/com.circleci.runner.plist`
   Start CircleCI Runner manually with `$ circleci-runner machine --config #{Dir.home}/Library/Preferences/com.circleci.runner/config.yaml`"
   end
 
