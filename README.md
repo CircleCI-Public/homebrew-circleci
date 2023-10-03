@@ -1,6 +1,6 @@
 # Homebrew CircleCI
 
-The CircleCI Homebrew Cask Repository for MacOS tools.
+The CircleCI Homebrew Cask Repository for macOS tools.
 
 ## Installation
 
