@@ -18,9 +18,32 @@ See the [CircleCI Self-Hosted Runner documentation](https://circleci.com/docs/ru
 
 #### Installation
 
-The CircleCI Self-Hosted Runner for MacOS can be installed by runner:
+The CircleCI Self-Hosted Runner for MacOS can be installed with the command `brew install --cask circleci-public/homebrew-circleci/circleci-runner`
 
-`brew install --cask circleci-public/homebrew-circleci/circleci-runner`
+##### Configuration
+
+The CircleCI Self-Hosted runner for MacOS is configured in the Library of the user who installed the runner. It can be found at `$HOME/Library/Preferences/com.circleci.runner/config.yaml`. The configuration file will need to be updated with a runner token before the self-hosted runner will be able to start.
+
+A token and resource class can be created by using the [CircleCI CLI](https://circleci.com/docs/local-cli/); run `circleci runner resource-class --help` and `circleci runner token --help` for details.
+
+
+##### Reviewing and Accepting the Apple Signature Notarization
+
+Because the self-hosted runner is not compiled from source during installation the binary must be approved to run on your mac. This can be done via the UI by accepting the macOS pop-up asking if you wish to run the binary from the internet or programmatically.
+
+To programmatically check and authorize the self-hosted runner use the following steps:
+
+Verify the signature and notarization of the binary
+
+`$ spctl -a -vvv -t install /opt/homebrew/bin/circleci-runner`
+
+Accept the Apple notarization ticket
+
+`$ sudo xattr -r -d com.apple.quarantine /opt/homebrew/bin/circleci-runner`
+
+#### Stopping and Restarting the Self-Hosted Runner
+
+The runner is automatically started as a MacOS Launch Agent for the [launchd](https://en.wikipedia.org/wiki/Launchd) service manager. This is configured in the Library of the installing user at `$HOME/Library/LaunchAgents/com.circleci.runner.plist`. It is managed via the `launchctl` command.
 
 #### Uninstallation
 
