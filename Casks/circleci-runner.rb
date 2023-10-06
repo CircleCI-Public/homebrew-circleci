@@ -25,6 +25,69 @@ cask "circleci-runner" do
   logDir = "#{Dir.home}/Library/Logs/com.circleci.runner"
   logFile = "#{logDir}/runner.log"
 
+  prefix = ENV["HOMEBREW_PREFIX"]
+  service "#{Dir.home}/Library/LaunchAgents/com.circleci.runner.plist"
+
+  preflight do
+    if not File.exists?(plistFile)
+      plist = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+    <dict>
+        <key>Label</key>
+        <string>com.circleci.runner</string>
+
+        <key>Program</key>
+        <string>#{prefix}/bin/circleci-runner</string>
+
+        <key>ProgramArguments</key>
+        <array>
+            <string>#{prefix}/bin/circleci-runner</string>
+            <string>machine</string>
+            <string>--config</string>
+            <string>#{configFile}</string>
+        </array>
+
+        <key>RunAtLoad</key>
+        <true/>
+
+        	<key>LimitLoadToSessionType</key>
+	       <array>
+            <!-- start agent during GUI sessions -->
+	         <string>Aqua</string>
+            <!-- start agent during ssh sessions -->
+	         <string>StandardIO</string>
+	         <string>Background</string>
+	       </array>
+
+        <!-- The agent needs to run at all times -->
+        <key>KeepAlive</key>
+        <true/>
+
+        <!-- This prevents macOS from limiting the resource usage of the agent -->
+        <key>ProcessType</key>
+        <string>Interactive</string>
+
+        <!-- Increase the frequency of restarting the agent on failure, or post-update -->
+        <key>ThrottleInterval</key>
+        <integer>3</integer>
+
+        <!-- Wait for 10 minutes for the agent to shut down (the agent itself waits for tasks to complete) -->
+        <key>ExitTimeOut</key>
+        <integer>600</integer>
+
+        <key>StandardOutPath</key>
+        <string>#{logFile}</string>
+        <key>StandardErrorPath</key>
+        <string>#{logFile}</string>
+    </dict>
+</plist>"
+
+    File.open(plistFile, "w"){|f|f.write "#{plist}"}
+    
+    end
+  end
+
 
   postflight do
     if not File.exists?(configDir)
@@ -54,53 +117,6 @@ api:
         args: ["-p", launchAgentDir]
     end
 
-    if not File.exists?(plistFile)
-      plist = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-    <dict>
-        <key>Label</key>
-        <string>com.circleci.runner</string>
-
-        <key>Program</key>
-        <string>/opt/homebrew/bin/circleci-runner</string>
-
-        <key>ProgramArguments</key>
-        <array>
-            <string>/opt/homebrew/bin/circleci-runner</string>
-            <string>machine</string>
-            <string>--config</string>
-            <string>#{configFile}</string>
-        </array>
-
-        <key>RunAtLoad</key>
-        <true/>
-
-        <!-- The agent needs to run at all times -->
-        <key>KeepAlive</key>
-        <true/>
-
-        <!-- This prevents macOS from limiting the resource usage of the agent -->
-        <key>ProcessType</key>
-        <string>Interactive</string>
-
-        <!-- Increase the frequency of restarting the agent on failure, or post-update -->
-        <key>ThrottleInterval</key>
-        <integer>3</integer>
-
-        <!-- Wait for 10 minutes for the agent to shut down (the agent itself waits for tasks to complete) -->
-        <key>ExitTimeOut</key>
-        <integer>600</integer>
-
-        <key>StandardOutPath</key>
-        <string>#{logFile}</string>
-        <key>StandardErrorPath</key>
-        <string>#{logFile}</string>
-    </dict>
-</plist>"
-
-    File.open(plistFile, "w"){|f|f.write "#{plist}"}
-    end
 
     if not File.exists?(logDir)
       system_command "mkdir",
@@ -108,6 +124,7 @@ api:
     end
 
   end
+
 
   def caveats;  
     "Logs: #{Dir.home}/Library/Logs/com.circleci.runner
