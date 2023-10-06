@@ -35,15 +35,23 @@ To programmatically check and authorize the self-hosted runner use the following
 
 Verify the signature and notarization of the binary
 
-`$ spctl -a -vvv -t install /opt/homebrew/bin/circleci-runner`
+`$ spctl -a -vvv -t install "$(brew --prefix)/bin/circleci-runner"`
 
 Accept the Apple notarization ticket
 
-`$ sudo xattr -r -d com.apple.quarantine /opt/homebrew/bin/circleci-runner`
+`$ sudo xattr -r -d com.apple.quarantine "$(brew --prefix)/bin/circleci-runner"`
 
 #### Stopping and Restarting the Self-Hosted Runner
 
 The runner is automatically started as a MacOS Launch Agent for the [launchd](https://en.wikipedia.org/wiki/Launchd) service manager. This is configured in the Library of the installing user at `$HOME/Library/LaunchAgents/com.circleci.runner.plist`. It is managed via the `launchctl` command.
+
+To stop the self-hosted runner
+
+`$ sudo launchctl unload $HOME/Library/LaunchAgents/com.circleci.runner.plist`
+
+To start the self-hosted runner
+
+`$ sudo launchctl load $HOME/Library/LaunchAgents/com.circleci.runner.plist`
 
 #### Uninstallation
 
@@ -52,6 +60,10 @@ To uninstall the Self-Hosted CircleCI Runner brew package **without** purging lo
 
 To uninstall the Self-Hosted CircleCI Runner **with** purging logs and configuration:
 `brew uninstall --cask --zap circleci-public/homebrew-circleci/circleci-runner`
+
+## Logs
+
+Logs for the self-hosted runner can be found at `$HOME/Library/Logs/com.circleci.runner/runner.log`
 
 ## Contributing
 

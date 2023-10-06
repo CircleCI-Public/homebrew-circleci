@@ -115,14 +115,16 @@ Config: #{Dir.home}/Library/Preferences/com.circleci.runner/config.yaml
 Documentation: https://circleci.com/docs/runner-overview/
 CircleCI Self-Hosted Runner Changelog: https://circleci.com/changelog/self-hosted-runner/
 Before Running:
-  To check application notarization run `$ spctl -a -vvv -t install /opt/homebrew/bin/circleci-runner`
+  To check application notarization run `$ spctl -a -vvv -t install \"$(homebrew --prefix)/bin/circleci-runner\"`
 
-  To accept the notarization headlessly run `$ sudo xattr -r -d com.apple.quarantine /opt/homebrew/bin/circleci-runner`
+  To accept the notarization headlessly run `$ sudo xattr -r -d com.apple.quarantine \"$(homebrew --prefix)/bin/circleci-runner\"`
 
   Update the configration with your self-hosted runner token and runner name before starting
 
   Enable and Start the CircleCI Runner LaunchAgent with `$ launchctl load #{Dir.home}/Library/LaunchAgents/com.circleci.runner.plist`
-  Start CircleCI Runner manually with `$ circleci-runner machine --config #{Dir.home}/Library/Preferences/com.circleci.runner/config.yaml`"
+  Start CircleCI Runner manually with `$ circleci-runner machine --config #{Dir.home}/Library/Preferences/com.circleci.runner/config.yaml`
+  View the CircleCI Runner logs at #{Dir.home}/Library/Logs/com.circleci.runner/runner.log"
+  
   end
 
   zap trash:[
