@@ -59,7 +59,7 @@ To start the self-hosted runner the first time after it has been installed and c
 
 Then start the service with: 
 
-`$ launchctl unload $HOME/Library/LaunchAgents/com.circleci.runner.plist`
+`$ launchctl load $HOME/Library/LaunchAgents/com.circleci.runner.plist`
 
 To stop the self-hosted runner:
 
