@@ -132,9 +132,9 @@ Config: #{Dir.home}/Library/Preferences/com.circleci.runner/config.yaml
 Documentation: https://circleci.com/docs/runner-overview/
 CircleCI Self-Hosted Runner Changelog: https://circleci.com/changelog/self-hosted-runner/
 Before Running:
-  To check application notarization run `$ spctl -a -vvv -t install \"$(homebrew --prefix)/bin/circleci-runner\"`
+  To check application notarization run `$ spctl -a -vvv -t install \"$(brew --prefix)/bin/circleci-runner\"`
 
-  To accept the notarization headlessly run `$ sudo xattr -r -d com.apple.quarantine \"$(homebrew --prefix)/bin/circleci-runner\"`
+  To accept the notarization headlessly run `$ sudo xattr -r -d com.apple.quarantine \"$(brew --prefix)/bin/circleci-runner\"`
 
   Update the configration with your self-hosted runner token and runner name before starting
 

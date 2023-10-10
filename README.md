@@ -51,8 +51,6 @@ Accept the Apple notarization ticket
 
 #### Stopping and Restarting the Self-Hosted Runner
 
-The runner is automatically started as a MacOS Launch Agent for the [launchd](https://en.wikipedia.org/wiki/Launchd) service manager. This is configured in the Library of the installing user at `$HOME/Library/LaunchAgents/com.circleci.runner.plist`. It is managed via the `launchctl` command. This occurs when the user account that installed the runner logs in.
-
 To start the self-hosted runner the first time after it has been installed and configured run to enable the service:
 
 ```$ launchctl bootstrap gui/`stat -f %u` $HOME/Library/LaunchAgents/com.circleci.runner.plist```
@@ -65,6 +63,7 @@ To stop the self-hosted runner:
 
 `$ launchctl unload $HOME/Library/LaunchAgents/com.circleci.runner.plist`
 
+The runner is automatically started as a MacOS Launch Agent on login for the user who installed the runner. This is managed via [launchd](https://en.wikipedia.org/wiki/Launchd) service manager. This is configured in the Library of the installing user at `$HOME/Library/LaunchAgents/com.circleci.runner.plist`. It is managed via the `launchctl` command.
 
 #### Uninstallation
 
