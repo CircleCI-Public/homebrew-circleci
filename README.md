@@ -18,7 +18,15 @@ See the [CircleCI Self-Hosted Runner documentation](https://circleci.com/docs/ru
 
 #### Installation
 
-The CircleCI Self-Hosted Runner for MacOS can be installed with the command `brew install --cask circleci-public/homebrew-circleci/circleci-runner`
+The CircleCI Self-Hosted Runner for MacOS can be installed from the CircleCI homebrew Cask. 
+
+Add the cask to brew
+
+`brew tap circleci-public/circleci`
+
+Install the circleci-runner package
+
+`brew install circleci-runner`
 
 ##### Configuration
 
@@ -43,7 +51,19 @@ Accept the Apple notarization ticket
 
 #### Stopping and Restarting the Self-Hosted Runner
 
-The runner is automatically started as a MacOS Launch Agent for the [launchd](https://en.wikipedia.org/wiki/Launchd) service manager. This is configured in the Library of the installing user at `$HOME/Library/LaunchAgents/com.circleci.runner.plist`. It is managed via the `launchctl` command.
+To start the self-hosted runner the first time after it has been installed and configured run to enable the service:
+
+```$ launchctl bootstrap gui/`stat -f %u` $HOME/Library/LaunchAgents/com.circleci.runner.plist```
+
+Then start the service with: 
+
+`$ launchctl load $HOME/Library/LaunchAgents/com.circleci.runner.plist`
+
+To stop the self-hosted runner:
+
+`$ launchctl unload $HOME/Library/LaunchAgents/com.circleci.runner.plist`
+
+The runner is automatically started as a MacOS Launch Agent on login for the user who installed the runner. This is managed via [launchd](https://en.wikipedia.org/wiki/Launchd) service manager. This is configured in the Library of the installing user at `$HOME/Library/LaunchAgents/com.circleci.runner.plist`. It is managed via the `launchctl` command.
 
 To stop the self-hosted runner
 
