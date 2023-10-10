@@ -65,6 +65,14 @@ To stop the self-hosted runner:
 
 The runner is automatically started as a MacOS Launch Agent on login for the user who installed the runner. This is managed via [launchd](https://en.wikipedia.org/wiki/Launchd) service manager. This is configured in the Library of the installing user at `$HOME/Library/LaunchAgents/com.circleci.runner.plist`. It is managed via the `launchctl` command.
 
+To stop the self-hosted runner
+
+`$ sudo launchctl unload $HOME/Library/LaunchAgents/com.circleci.runner.plist`
+
+To start the self-hosted runner
+
+`$ sudo launchctl load $HOME/Library/LaunchAgents/com.circleci.runner.plist`
+
 #### Uninstallation
 
 To uninstall the Self-Hosted CircleCI Runner brew package **without** purging logs and configuration:
