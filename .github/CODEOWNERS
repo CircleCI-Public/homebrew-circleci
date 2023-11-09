@@ -1,2 +1,4 @@
 * @CircleCI-Public/on-prem
 
+# @circleci-internal-runner-bot requires co-ownership so it can approve release PRs automatically
+/Casks/circleci-runner.rb @CircleCI-Public/on-prem @circleci-internal-runner-bot
