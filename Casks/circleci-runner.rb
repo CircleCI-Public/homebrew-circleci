@@ -29,6 +29,14 @@ cask "circleci-runner" do
   service "#{Dir.home}/Library/LaunchAgents/com.circleci.runner.plist"
 
   preflight do
+    # Create the necessary directories prior to installation
+    dirs = [configDir, launchAgentDir, logDir, workingDir]
+    dirs.each do |dir|
+      if not File.exist?(dir)
+        system_command 'mkdir', args: ['-p', dir]
+      end
+    end
+
     if not File.exists?(plistFile)
       plist = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
@@ -90,11 +98,6 @@ cask "circleci-runner" do
 
 
   postflight do
-    if not File.exists?(configDir)
-    system_command "mkdir", 
-      args: ["-p", "#{configDir}"]
-    end
-
     if not File.exists?(configFile)
       conf = "runner:
   name: [[RUNNER_NAME]]
@@ -104,23 +107,6 @@ api:
   auth_token: [[RESOURCE_CLASS_TOKEN]]"
 
       File.open(configFile, "w"){|f| f.write "#{conf}"}
-    end
-
-    if not File.exists?(workingDir)
-      system_command "mkdir",
-        args: ["-p", workingDir]
-    end
-
-    # launchD configuartion
-    if not File.exists?(launchAgentDir)
-      system_command "mkdir",
-        args: ["-p", launchAgentDir]
-    end
-
-
-    if not File.exists?(logDir)
-      system_command "mkdir",
-        args: ["-p", logDir]
     end
 
   end
