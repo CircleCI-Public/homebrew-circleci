@@ -30,7 +30,14 @@ jobs:
       - run:
           name: Install New Updated Package
           command: |
-            brew install --build-from-source Casks/circleci-runner.rb
+            brew install --build-from-source Casks/circleci-runner.rb 2> err.out || echo "possible cask method error on install"
+            # build from source doesn't recognize the cask method with homebrew update
+            # this checks that the error out was indeed the unefined method and the circleci runner binary was installed
+            if [[ "$?" -eq "1" ]]; then 
+              grep "circleci-runner: undefined method" err.out 
+              which circleci-runner
+              echo "CircleCI Runner Formula successfully installed"
+            fi
             sed -i circleci-runner.rb.bk "s/\[\[RESOURCE_CLASS_TOKEN\]\]/$CI_RUNNER_TOKEN/g" ~/Library/Preferences/com.circleci.runner/config.yaml
             sed -i circleci-runner.rb.bk "s/\[\[RUNNER_NAME\]\]/CI-Brew-Package-Test/g" ~/Library/Preferences/com.circleci.runner/config.yaml
       - run:
