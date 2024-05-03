@@ -55,6 +55,11 @@ To start the self-hosted runner the first time after it has been installed and c
 
 ```$ launchctl bootstrap gui/`stat -f %u` $HOME/Library/LaunchAgents/com.circleci.runner.plist```
 
+##### Running in Headless Mode
+For running the self-hosted runner in a headless or non-GUI session, use the user domain in the launchctl bootstrap command as follows:
+
+```$ launchctl bootstrap user/`stat -f %u` $HOME/Library/LaunchAgents/com.circleci.runner.plist```
+
 Then start the service with: 
 
 `$ launchctl load $HOME/Library/LaunchAgents/com.circleci.runner.plist`

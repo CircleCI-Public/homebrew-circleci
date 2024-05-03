@@ -48,6 +48,7 @@ jobs:
       - run:
           name: Start Runner
           command: |
+            sudo launchctl bootstrap user/`stat -f %u` ~/Library/LaunchAgents/com.circleci.runner.plist
             launchctl load ~/Library/LaunchAgents/com.circleci.runner.plist
             sleep 2
             fgrep -n "starting agent" ~/Library/Logs/com.circleci.runner/runner.log

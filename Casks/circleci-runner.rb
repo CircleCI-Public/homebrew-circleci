@@ -66,6 +66,8 @@ cask "circleci-runner" do
             <!-- start agent during ssh sessions -->
 	         <string>StandardIO</string>
 	         <string>Background</string>
+            <!-- start agent during standard user sessions -->
+	         <string>user</string>
 	       </array>
 
         <!-- The agent needs to run at all times -->
