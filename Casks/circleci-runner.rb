@@ -37,7 +37,7 @@ cask "circleci-runner" do
       end
     end
 
-    if not File.exists?(plistFile)
+    if not File.exist?(plistFile)
       plist = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
 <plist version=\"1.0\">
@@ -100,7 +100,7 @@ cask "circleci-runner" do
 
 
   postflight do
-    if not File.exists?(configFile)
+    if not File.exist?(configFile)
       conf = "runner:
   name: [[RUNNER_NAME]]
   working_directory: \"#{workingDir}\"
