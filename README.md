@@ -6,7 +6,9 @@ The CircleCI Homebrew Cask Repository for macOS tools.
 
 The cask can be tapped in homebrew by running:
 
-`brew tap circleci-public/homebrew-circleci`
+```shell
+$ brew tap circleci-public/homebrew-circleci
+```
 
 ## Casks
 
@@ -22,11 +24,15 @@ The CircleCI Self-Hosted Runner for MacOS can be installed from the CircleCI hom
 
 Add the cask to brew
 
-`brew tap circleci-public/circleci`
+```shell
+$ brew tap circleci-public/circleci
+```
 
 Install the circleci-runner package
 
-`brew install circleci-runner`
+```shell
+$ brew install circleci-runner
+```
 
 ##### Configuration
 
@@ -43,48 +49,74 @@ To programmatically check and authorize the self-hosted runner use the following
 
 Verify the signature and notarization of the binary
 
-`$ spctl -a -vvv -t install "$(brew --prefix)/bin/circleci-runner"`
+```shell
+$ spctl -a -vvv -t install "$(brew --prefix)/bin/circleci-runner"
+```
 
 Accept the Apple notarization ticket
 
-`$ sudo xattr -r -d com.apple.quarantine "$(brew --prefix)/bin/circleci-runner"`
+```shell
+$ sudo xattr -r -d com.apple.quarantine "$(brew --prefix)/bin/circleci-runner"
+```
 
-#### Stopping and Restarting the Self-Hosted Runner
+#### Starting and Stopping the Self-Hosted Runner
 
-To start the self-hosted runner the first time after it has been installed and configured run to enable the service:
+The runner automatically starts as a macOS Launch Agent upon login for the user who installed the runner. The [launchd](https://en.wikipedia.org/wiki/Launchd) service manager manages this, and it's configured in the Library of the installing user at `$HOME/Library/LaunchAgents/com.circleci.runner.plist`. When using a non-GUI session, it is configured within the system services. It is controlled using the [launchctl](https://ss64.com/mac/launchctl.html) command.
 
-```$ launchctl bootstrap gui/`stat -f %u` $HOME/Library/LaunchAgents/com.circleci.runner.plist```
+1. To start the self-hosted runner for the first time after it has been installed and configured, you can bootstrap the service using the commands below:
 
-##### Running in Headless Mode
-For running the self-hosted runner in a headless or non-GUI session, use the user domain in the launchctl bootstrap command as follows:
+    ```shell
+    $ launchctl bootstrap gui/$(id -u) $HOME/Library/LaunchAgents/com.circleci.runner.plist
+    $ launchctl enable gui/$(id -u)/com.circleci.runner
+    $ launchctl kickstart -k gui/$(id -u)/com.circleci.runner
+    ```
 
-```$ launchctl bootstrap user/`stat -f %u` $HOME/Library/LaunchAgents/com.circleci.runner.plist```
+    ##### Running in a non-GUI session
+    If you wish to run the self-hosted runner in a headless or non-GUI session, copy or move the `.plist` file to `/Library/LaunchAgents`. This location is for per-user agents configured by the administrator, which ensures the service loads after a reboot:
+    ```shell
+    $ sudo mv $HOME/Library/LaunchAgents/com.circleci.runner.plist /Library/LaunchAgents/
+    ```
 
-Then start the service with: 
+    Next, use the user domain in the `launchctl` commands instead:
+    ```shell
+    $ launchctl bootstrap user/$(id -u) /Library/LaunchAgents/com.circleci.runner.plist
+    $ launchctl enable user/$(id -u)/com.circleci.runner
+    $ launchctl kickstart -k user/$(id -u)/com.circleci.runner
+    ```
 
-`$ launchctl load $HOME/Library/LaunchAgents/com.circleci.runner.plist`
+2. To verify that the service is running in a GUI session, execute the following command:
+    ```shell
+    $ launchctl print gui/$(id -u)/com.circleci.runner
+    ```
 
-To stop the self-hosted runner:
+    In a non-GUI session, use:
+    ```shell
+    $ launchctl print user/$(id -u)/com.circleci.runner
+    ```
 
-`$ launchctl unload $HOME/Library/LaunchAgents/com.circleci.runner.plist`
+3. In a GUI session, you can stop the runner agent and prevent the service from starting automatically at boot by executing:
+    ```shell
+    $ launchctl disable gui/$(id -u)/com.circleci.runner
+    $ launchctl bootout gui/$(id -u)/com.circleci.runner
+    ```
 
-The runner is automatically started as a MacOS Launch Agent on login for the user who installed the runner. This is managed via [launchd](https://en.wikipedia.org/wiki/Launchd) service manager. This is configured in the Library of the installing user at `$HOME/Library/LaunchAgents/com.circleci.runner.plist`. It is managed via the `launchctl` command.
-
-To stop the self-hosted runner
-
-`$ sudo launchctl unload $HOME/Library/LaunchAgents/com.circleci.runner.plist`
-
-To start the self-hosted runner
-
-`$ sudo launchctl load $HOME/Library/LaunchAgents/com.circleci.runner.plist`
+    In a non-GUI session it would be:
+    ```shell
+    $ launchctl disable user/$(id -u)/com.circleci.runner
+    $ launchctl bootout user/$(id -u)/com.circleci.runner
+    ```
 
 #### Uninstallation
 
 To uninstall the Self-Hosted CircleCI Runner brew package **without** purging logs and configuration:
-`brew uninstall --cask circleci-public/homebrew-circleci/circleci-runner`
+```shell
+$ brew uninstall --cask circleci-public/homebrew-circleci/circleci-runner
+```
 
 To uninstall the Self-Hosted CircleCI Runner **with** purging logs and configuration:
-`brew uninstall --cask --zap circleci-public/homebrew-circleci/circleci-runner`
+```shell
+$ brew uninstall --cask --zap circleci-public/homebrew-circleci/circleci-runner
+```
 
 ## Logs
 
