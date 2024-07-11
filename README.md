@@ -61,50 +61,50 @@ $ sudo xattr -r -d com.apple.quarantine "$(brew --prefix)/bin/circleci-runner"
 
 #### Starting and Stopping the Self-Hosted Runner
 
-To start the self-hosted runner for the first time after it has been installed and configured, you can bootstrap the service using the commands below:
-```shell
-$ launchctl bootstrap gui/$(id -u) $HOME/Library/LaunchAgents/com.circleci.runner.plist
-$ launchctl enable gui/$(id -u)/com.circleci.runner
-$ launchctl kickstart -k gui/$(id -u)/com.circleci.runner
-```
+The runner automatically starts as a macOS Launch Agent upon login for the user who installed the runner. The [launchd](https://en.wikipedia.org/wiki/Launchd) service manager manages this, and it's configured in the Library of the installing user at `$HOME/Library/LaunchAgents/com.circleci.runner.plist`. When using a non-GUI session, it is configured within the system services. It is controlled using the [launchctl](https://ss64.com/mac/launchctl.html) command.
 
-##### Running in a non-GUI session
-If you wish to run the self-hosted runner in a headless or non-GUI session, copy or move the `.plist` file to `/Library/LaunchAgents`. This location is for per-user agents configured by the administrator, which ensures the service loads after a reboot:
-```shell
-$ sudo mv $HOME/Library/LaunchAgents/com.circleci.runner.plist /Library/LaunchAgents/
-```
+1. To start the self-hosted runner for the first time after it has been installed and configured, you can bootstrap the service using the commands below:
 
-Next, use the user domain in the `launchctl` bootstrap command:
-```shell
-$ launchctl bootstrap user/$(id -u) /Library/LaunchAgents/com.circleci.runner.plist
-$ launchctl enable user/$(id -u)/com.circleci.runner
-$ launchctl kickstart -k user/$(id -u)/com.circleci.runner
-```
+    ```shell
+    $ launchctl bootstrap gui/$(id -u) $HOME/Library/LaunchAgents/com.circleci.runner.plist
+    $ launchctl enable gui/$(id -u)/com.circleci.runner
+    $ launchctl kickstart -k gui/$(id -u)/com.circleci.runner
+    ```
 
-To verify that the service is running in a GUI session, execute the following command:
+    ##### Running in a non-GUI session
+    If you wish to run the self-hosted runner in a headless or non-GUI session, copy or move the `.plist` file to `/Library/LaunchAgents`. This location is for per-user agents configured by the administrator, which ensures the service loads after a reboot:
+    ```shell
+    $ sudo mv $HOME/Library/LaunchAgents/com.circleci.runner.plist /Library/LaunchAgents/
+    ```
 
-```shell
-$ launchctl print gui/$(id -u)/com.circleci.runner
-```
+    Next, use the user domain in the `launchctl` commands instead:
+    ```shell
+    $ launchctl bootstrap user/$(id -u) /Library/LaunchAgents/com.circleci.runner.plist
+    $ launchctl enable user/$(id -u)/com.circleci.runner
+    $ launchctl kickstart -k user/$(id -u)/com.circleci.runner
+    ```
 
-In a non-GUI session, use:
-```shell
-$ launchctl print user/$(id -u)/com.circleci.runner
-```
+2. To verify that the service is running in a GUI session, execute the following command:
+    ```shell
+    $ launchctl print gui/$(id -u)/com.circleci.runner
+    ```
 
-The runner automatically starts as a macOS Launch Agent upon login for the user who installed the runner. This is managed by the [launchd](https://en.wikipedia.org/wiki/Launchd) service manager  and is configured in the Library of the installing user at `$HOME/Library/LaunchAgents/com.circleci.runner.plist`. When using a non-GUI session, it is configured within the system services. It is controlled using the [launchctl](https://ss64.com/mac/launchctl.html) command.
+    In a non-GUI session, use:
+    ```shell
+    $ launchctl print user/$(id -u)/com.circleci.runner
+    ```
 
-In a GUI session, you can stop the runner agent and prevent the service from starting automatically at boot by executing:
-```shell
-$ launchctl disable gui/$(id -u)/com.circleci.runner
-$ launchctl bootout gui/$(id -u)/com.circleci.runner
-```
+3. In a GUI session, you can stop the runner agent and prevent the service from starting automatically at boot by executing:
+    ```shell
+    $ launchctl disable gui/$(id -u)/com.circleci.runner
+    $ launchctl bootout gui/$(id -u)/com.circleci.runner
+    ```
 
-In a non-GUI session it would be:
-```shell
-$ launchctl disable user/$(id -u)/com.circleci.runner
-$ launchctl bootout user/$(id -u)/com.circleci.runner
-```
+    In a non-GUI session it would be:
+    ```shell
+    $ launchctl disable user/$(id -u)/com.circleci.runner
+    $ launchctl bootout user/$(id -u)/com.circleci.runner
+    ```
 
 #### Uninstallation
 
