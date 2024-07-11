@@ -48,12 +48,22 @@ jobs:
             spctl -a -vvv -t install /opt/homebrew/bin/circleci-runner
             sudo xattr -r -d com.apple.quarantine /opt/homebrew/bin/circleci-runner
       - run:
-          name: Start Runner
+          name: Start the runner service
           command: |
+            echo "Move the .plist file to the per-user system agents"
             sudo mv ~/Library/LaunchAgents/com.circleci.runner.plist /Library/LaunchAgents/
+
+            echo "Bootstrap and kickstart the runner service"
             launchctl bootstrap user/$(id -u) /Library/LaunchAgents/com.circleci.runner.plist
-            launchctl print user/$(id -u)/com.circleci.runner
+            launchctl enable user/$(id -u)/com.circleci.runner
+            launchctl kickstart -k user/$(id -u)/com.circleci.runner
+      - run:
+          name: Verify the runner is running
+          command: |
             sleep 2
+
+            launchctl print user/$(id -u)/com.circleci.runner
+
             fgrep -n "starting agent" ~/Library/Logs/com.circleci.runner/runner.log
       - run:
           name: Trigger and Watch Smoke Test Job
@@ -96,6 +106,24 @@ jobs:
             done
             echo "Unable to check workflow status"
             exit 1
+      - run:
+          name: Stop and uninstall the runner
+          command: |
+            echo "Disable and boot out the runner service"
+            launchctl disable user/$(id -u)/com.circleci.runner
+            launchctl bootout user/$(id -u)/com.circleci.runner
+
+            sleep 2
+
+            if ps aux | grep -v grep | grep -q circleci-runner; then
+              echo "Error: circleci-runner should be stopped"
+              exit 1
+            else
+              echo "circleci-runner successfully stopped"
+            fi
+
+            echo "Uninstall the Homebrew package"
+            brew uninstall circleci-runner
 
   smoketest:
     machine: true
