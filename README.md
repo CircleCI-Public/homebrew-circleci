@@ -81,20 +81,28 @@ $ launchctl enable user/$(id -u)/com.circleci.runner
 $ launchctl kickstart -k user/$(id -u)/com.circleci.runner
 ```
 
-To verify that the service is running, execute the following command:
+To verify that the service is running in a GUI session, execute the following command:
+
+```shell
+$ launchctl print gui/$(id -u)/com.circleci.runner
+```
+
+In a non-GUI session, use:
 ```shell
 $ launchctl print user/$(id -u)/com.circleci.runner
 ```
 
 The runner automatically starts as a macOS Launch Agent upon login for the user who installed the runner. This is managed by the [launchd](https://en.wikipedia.org/wiki/Launchd) service manager  and is configured in the Library of the installing user at `$HOME/Library/LaunchAgents/com.circleci.runner.plist`. When using a non-GUI session, it is configured within the system services. It is controlled using the [launchctl](https://ss64.com/mac/launchctl.html) command.
 
-In order to stop the runner agent, prevent the service from starting automatically at boot by executing:
+In a GUI session, you can stop the runner agent and prevent the service from starting automatically at boot by executing:
 ```shell
-$ launchctl disable user/$(id -u)/com.circleci.runner
+$ launchctl disable gui/$(id -u)/com.circleci.runner
+$ launchctl bootout gui/$(id -u)/com.circleci.runner
 ```
 
-To stop the currently running service:
+In a non-GUI session it would be:
 ```shell
+$ launchctl disable user/$(id -u)/com.circleci.runner
 $ launchctl bootout user/$(id -u)/com.circleci.runner
 ```
 
