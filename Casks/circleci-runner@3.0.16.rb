@@ -1,4 +1,4 @@
-cask "circleci-runner" do
+cask "circleci-runner@3.0.16" do
   version "3.0.16"
   name "circleci-runner"
   desc "The self-hosted runner agent for CircleCI"
@@ -29,7 +29,7 @@ cask "circleci-runner" do
   service "#{Dir.home}/Library/LaunchAgents/com.circleci.runner.plist"
 
   preflight do
-    if not File.exists?(plistFile)
+    if not File.exist?(plistFile)
       plist = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
 <plist version=\"1.0\">
@@ -90,12 +90,12 @@ cask "circleci-runner" do
 
 
   postflight do
-    if not File.exists?(configDir)
+    if not File.exist?(configDir)
     system_command "mkdir", 
       args: ["-p", "#{configDir}"]
     end
 
-    if not File.exists?(configFile)
+    if not File.exist?(configFile)
       conf = "runner:
   name: [[RUNNER_NAME]]
   working_directory: \"#{workingDir}\"
@@ -106,19 +106,19 @@ api:
       File.open(configFile, "w"){|f| f.write "#{conf}"}
     end
 
-    if not File.exists?(workingDir)
+    if not File.exist?(workingDir)
       system_command "mkdir",
         args: ["-p", workingDir]
     end
 
     # launchD configuartion
-    if not File.exists?(launchAgentDir)
+    if not File.exist?(launchAgentDir)
       system_command "mkdir",
         args: ["-p", launchAgentDir]
     end
 
 
-    if not File.exists?(logDir)
+    if not File.exist?(logDir)
       system_command "mkdir",
         args: ["-p", logDir]
     end
