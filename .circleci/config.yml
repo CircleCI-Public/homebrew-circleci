@@ -69,7 +69,7 @@ jobs:
           name: Trigger and Watch Smoke Test Job
           command: |
             curl --request POST --url https://circleci.com/api/v2/project/gh/CircleCI-Public/homebrew-circleci/pipeline --header "Circle-Token: $CI_API_TOKEN" --header 'content-type: application/json' \
-              --data '{"parameters":{"run_smoketest":true}}' -o pipeline_data.json --silent --write-out '%{http_code}' > pipeline_status_code.txt
+              --data '{"branch":"<< pipeline.git.branch >>","parameters":{"run_smoketest":true}}' -o pipeline_data.json --silent --write-out '%{http_code}' > pipeline_status_code.txt
             if [ ! "$(cat pipeline_status_code.txt)" = "201" ]; then
               echo "Failed to launch pipeline $(cat pipeline_data.json)"
               exit 1
