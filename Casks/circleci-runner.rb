@@ -4,8 +4,8 @@ cask "circleci-runner" do
   desc "The self-hosted runner agent for CircleCI"
   homepage "https://circleci.com/docs/2.0/runner-overview/"
 
-  intelSHA = "6b32d3fbe2dbb8acf8a9e82edc40a3a558214107c9fb2234814e5d3d5f24c331"
-  armSHA = "e333674a1a4eaa759265be146171ad940c12d80f53552c9cd6f4190144fb33ea"
+  intelSHA = "435b7dd4694840c2c9bf5fa044df6b0be65a26af4481b8cb142ca0fc0e28d798"
+  armSHA = "b4db25f4465a829c1f5fd28b2643d2510b5ab1368460e215ac08dbf19bf2a231"
   
   if Hardware::CPU.intel? 
     sha256 "#{intelSHA}"
