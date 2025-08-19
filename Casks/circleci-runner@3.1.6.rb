@@ -1,4 +1,4 @@
-cask "circleci-runner" do
+cask "circleci-runner@3.1.6" do
   version "3.1.6"
   name "circleci-runner"
   desc "The self-hosted runner agent for CircleCI"
