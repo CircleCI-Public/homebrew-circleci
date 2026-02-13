@@ -60,11 +60,17 @@ jobs:
       - run:
           name: Verify the runner is running
           command: |
-            sleep 2
-
             launchctl print user/$(id -u)/com.circleci.runner
 
-            fgrep -n "starting agent" ~/Library/Logs/com.circleci.runner/runner.log
+            for i in {1..10}; do
+              if fgrep -n "starting agent" ~/Library/Logs/com.circleci.runner/runner.log; then
+                exit 0
+              fi
+              echo "Waiting for runner to start... (attempt $i)"
+              sleep 2
+            done
+            echo "Runner failed to start within timeout"
+            exit 1
       - run:
           name: Trigger and Watch Smoke Test Job
           command: |
