@@ -23,8 +23,8 @@ workflows:
 jobs:
   install_and_run:
     macos:
-      xcode: 14.3.1
-    resource_class: macos.m1.medium.gen1
+      xcode: 16.2.0
+    resource_class: m4pro.medium
     steps:
       - checkout
       - run:
