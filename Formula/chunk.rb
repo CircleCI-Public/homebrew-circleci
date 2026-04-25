@@ -5,21 +5,21 @@
 class Chunk < Formula
   desc "Chunk CLI by CircleCI"
   homepage "https://github.com/CircleCI-Public/chunk-cli"
-  version "0.7.30"
+  version "0.7.31"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/CircleCI-Public/chunk-cli/releases/download/v0.7.30/chunk-cli_Darwin_x86_64.tar.gz"
-      sha256 "4a917b322a2fc8a444d3812f2c5e73d207ca482ff78ec250900496bcd67468ea"
+      url "https://github.com/CircleCI-Public/chunk-cli/releases/download/v0.7.31/chunk-cli_Darwin_x86_64.tar.gz"
+      sha256 "0f5ea1c8d2dd30011e50174d3abe2b60e84e1313a18c785c4331d2c4919b1fd5"
 
       define_method(:install) do
         bin.install "chunk"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/CircleCI-Public/chunk-cli/releases/download/v0.7.30/chunk-cli_Darwin_arm64.tar.gz"
-      sha256 "db992473f8427fd5a7050386571c017f8e14d21e31e31a9382bf6af2c7287915"
+      url "https://github.com/CircleCI-Public/chunk-cli/releases/download/v0.7.31/chunk-cli_Darwin_arm64.tar.gz"
+      sha256 "194dd3b0a02f7929faa43384aae2f71d3c9ed655e717a7a471808c525187a69b"
 
       define_method(:install) do
         bin.install "chunk"
@@ -29,15 +29,15 @@ class Chunk < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/CircleCI-Public/chunk-cli/releases/download/v0.7.30/chunk-cli_Linux_x86_64.tar.gz"
-      sha256 "34eebf2da09bbcb7c0bc3409f0dad6372744908142325ad6014072faadd7a2b2"
+      url "https://github.com/CircleCI-Public/chunk-cli/releases/download/v0.7.31/chunk-cli_Linux_x86_64.tar.gz"
+      sha256 "9bee164f78064793d846ba5f20c48f8ee17b5c93489a8527b3ce70684447a656"
       define_method(:install) do
         bin.install "chunk"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/CircleCI-Public/chunk-cli/releases/download/v0.7.30/chunk-cli_Linux_arm64.tar.gz"
-      sha256 "275501184e275c5d451aece1beb95302f68acfb54cf87a28eee0f844091c8e3a"
+      url "https://github.com/CircleCI-Public/chunk-cli/releases/download/v0.7.31/chunk-cli_Linux_arm64.tar.gz"
+      sha256 "1f600300572566599e2a7829e985ddf273d5f3a4affea328b2d72bb4f26c6c90"
       define_method(:install) do
         bin.install "chunk"
       end
