@@ -1,4 +1,4 @@
-cask "circleci-runner" do
+cask "circleci-runner@3.1.9" do
 
   version "3.1.9"
   name "circleci-runner"
