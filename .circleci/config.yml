@@ -7,14 +7,14 @@ orbs:
   continuation: circleci/continuation@2.0.1
 
 parameters:
-  run_smoketest:
+  trigger_smoketest:
     default: false
     type: boolean
 
 workflows:
   setup:
     when:
-      not: << pipeline.parameters.run_smoketest >>
+      not: << pipeline.parameters.trigger_smoketest >>
     jobs:
       - path-filtering/filter:
           base-revision: main
@@ -23,7 +23,7 @@ workflows:
             Casks/circleci-runner\.rb run_tests true
 
   smoketest-continue:
-    when: << pipeline.parameters.run_smoketest >>
+    when: << pipeline.parameters.trigger_smoketest >>
     jobs:
       - continue-smoketest
 
