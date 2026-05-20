@@ -31,6 +31,7 @@ jobs:
   continue-smoketest:
     executor: continuation/default
     steps:
+      - checkout
       - continuation/continue:
           configuration_path: .circleci/runner_brew_test.yml
           parameters: '{"run_smoketest": true}'
