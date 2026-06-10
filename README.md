@@ -16,6 +16,7 @@ $ brew tap circleci-public/homebrew-circleci
 
 | Cask | Description |
 |------|-------------|
+| `circleci@next` | Preview releases of CircleCI CLI |
 | `circleci-runner` | CircleCI Self-Hosted Machine Runner for macOS |
 
 See the [Casks README](Casks/README.md) for installation and configuration details.
