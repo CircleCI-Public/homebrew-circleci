@@ -2,9 +2,14 @@
 
 | Cask | Description |
 |------|-------------|
+| [`circleci@next`](#circleci-cli) | Preview release of CircleCI CLI |
 | [`circleci-runner`](#circleci-runner) | CircleCI Self-Hosted Machine Runner for macOS |
-
 ---
+
+## circleci-cli
+
+Preview releases of the CircleCI CLI.
+
 
 ## circleci-runner
 
