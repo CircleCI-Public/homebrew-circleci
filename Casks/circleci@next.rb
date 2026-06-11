@@ -5,41 +5,58 @@ cask "circleci@next" do
   on_macos do
     on_intel do
       sha256 "c5436bf1c6c990abf6e5b83015b1f349551b588c6af3097b7f267740372e7fc8"
-      url "https://github.com/CircleCI-Public/circleci-cli/releases/download/v#{version}/circleci-cli_#{version}_darwin_amd64.tar.gz"
-      rename "circleci-cli_1.0.39716-pre_darwin_amd64/circleci", "circleci"
+      url "https://github.com/CircleCI-Public/circleci-cli/releases/download/v#{version}/circleci-cli_#{version}_darwin_amd64.tar.gz",
+          verified: "github.com/CircleCI-Public/circleci-cli/"
+
+      binary "circleci-cli_#{version}_darwin_amd64/circleci"
+      manpage "circleci-cli_#{version}_darwin_amd64/share/man/man1/circleci.1"
+      bash_completion "circleci-cli_#{version}_darwin_amd64/share/bash-completion/completions/circleci"
+      zsh_completion "circleci-cli_#{version}_darwin_amd64/share/zsh/site-functions/_circleci"
     end
     on_arm do
       sha256 "b43c5f023a4e1b2b6c66f82de642c7838215e315bd41849616c45e054ec595ad"
-      url "https://github.com/CircleCI-Public/circleci-cli/releases/download/v#{version}/circleci-cli_#{version}_darwin_arm64.tar.gz"
-      rename "circleci-cli_1.0.39716-pre_darwin_arm64/circleci", "circleci"
+      url "https://github.com/CircleCI-Public/circleci-cli/releases/download/v#{version}/circleci-cli_#{version}_darwin_arm64.tar.gz",
+          verified: "github.com/CircleCI-Public/circleci-cli/"
+
+      binary "circleci-cli_#{version}_darwin_arm64/circleci"
+      manpage "circleci-cli_#{version}_darwin_arm64/share/man/man1/circleci.1"
+      bash_completion "circleci-cli_#{version}_darwin_arm64/share/bash-completion/completions/circleci"
+      zsh_completion "circleci-cli_#{version}_darwin_arm64/share/zsh/site-functions/_circleci"
     end
   end
 
   on_linux do
     on_intel do
       sha256 "f2671e844593b672632bca0b71aa507402e1f2d45da82cccfb69c29f00467af2"
-      url "https://github.com/CircleCI-Public/circleci-cli/releases/download/v#{version}/circleci-cli_#{version}_linux_amd64.tar.gz"
-      rename "circleci-cli_1.0.39716-pre_linux_amd64/circleci", "circleci"
+      url "https://github.com/CircleCI-Public/circleci-cli/releases/download/v#{version}/circleci-cli_#{version}_linux_amd64.tar.gz",
+          verified: "github.com/CircleCI-Public/circleci-cli/"
+
+      binary "circleci-cli_#{version}_linux_amd64/circleci"
+      manpage "circleci-cli_#{version}_linux_amd64/share/man/man1/circleci.1"
+      bash_completion "circleci-cli_#{version}_linux_amd64/share/bash-completion/completions/circleci"
+      zsh_completion "circleci-cli_#{version}_linux_amd64/share/zsh/site-functions/_circleci"
+      rename "circleci-cli_#{version}_linux_amd64/circleci", "circleci"
     end
     on_arm do
       sha256 "b5399d7330978157861b45c050b9c9cccd3c96f19c4323309a649da1dac4509a"
-      url "https://github.com/CircleCI-Public/circleci-cli/releases/download/v#{version}/circleci-cli_#{version}_linux_arm64.tar.gz"
-      rename "circleci-cli_1.0.39716-pre_linux_arm64/circleci", "circleci"
+      url "https://github.com/CircleCI-Public/circleci-cli/releases/download/v#{version}/circleci-cli_#{version}_linux_arm64.tar.gz",
+          verified: "github.com/CircleCI-Public/circleci-cli/"
+
+      binary "circleci-cli_#{version}_linux_arm64/circleci"
+      manpage "circleci-cli_#{version}_linux_arm64/share/man/man1/circleci.1"
+      bash_completion "circleci-cli_#{version}_linux_arm64/share/bash-completion/completions/circleci"
+      zsh_completion "circleci-cli_#{version}_linux_arm64/share/zsh/site-functions/_circleci"
+      rename "circleci-cli_#{version}_linux_arm64/circleci", "circleci"
     end
   end
 
   name "circleci@next"
-  desc "CircleCI command line tool."
-  homepage "https://circleci.com"
+  desc "CircleCI command-line tool"
+  homepage "https://circleci.com/"
 
   livecheck do
     skip "Auto-generated on release."
   end
-
-  binary "circleci"
-  manpage "share/man/man1/circleci.1"
-  bash_completion "share/bash-completion/completions/circleci"
-  zsh_completion "share/zsh/site-functions/_circleci"
 
   # No zap stanza required
 
