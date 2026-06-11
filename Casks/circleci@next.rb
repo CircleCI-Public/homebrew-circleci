@@ -25,8 +25,8 @@ cask "circleci@next" do
   end
 
   name "circleci@next"
-  desc "CircleCI command line tool."
-  homepage "https://circleci.com"
+  desc "CircleCI command-line tool"
+  homepage "https://circleci.com/"
 
   livecheck do
     skip "Auto-generated on release."
