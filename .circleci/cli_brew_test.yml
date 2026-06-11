@@ -1,0 +1,52 @@
+version: 2.1
+
+parameters:
+  run_cli_tests:
+    default: false
+    type: boolean
+
+workflows:
+  cli-install-test:
+    when: << pipeline.parameters.run_cli_tests >>
+    jobs:
+      - install_and_verify_macos
+      - install_and_verify_linux
+
+jobs:
+  install_and_verify_macos:
+    macos:
+      xcode: 16.2.0
+    resource_class: m4pro.medium
+    steps:
+      - checkout
+      - run:
+          name: Install circleci@next cask
+          command: |
+            brew install --cask Casks/circleci@next.rb
+      - run:
+          name: Verify man page
+          command: |
+            man circleci | head -20
+      - run:
+          name: Verify CLI help
+          command: |
+            circleci --help
+
+  install_and_verify_linux:
+    docker:
+      - image: homebrew/brew:latest
+    resource_class: medium
+    steps:
+      - checkout
+      - run:
+          name: Install circleci@next cask
+          command: |
+            brew install --cask Casks/circleci@next.rb
+      - run:
+          name: Verify man page
+          command: |
+            man circleci | head -20
+      - run:
+          name: Verify CLI help
+          command: |
+            circleci --help
