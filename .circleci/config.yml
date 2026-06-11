@@ -18,14 +18,9 @@ workflows:
     jobs:
       - path-filtering/filter:
           base-revision: main
-          config-path: .circleci/runner_brew_test.yml
+          config-path: .circleci/combined_brew_test.yml
           mapping: |
             Casks/circleci-runner\.rb run_tests true
-      - path-filtering/filter:
-          name: filter-cli-tests
-          base-revision: main
-          config-path: .circleci/cli_brew_test.yml
-          mapping: |
             Casks/circleci@next\.rb run_cli_tests true
 
   smoketest-continue:
@@ -39,5 +34,5 @@ jobs:
     steps:
       - checkout
       - continuation/continue:
-          configuration_path: .circleci/runner_brew_test.yml
+          configuration_path: .circleci/combined_brew_test.yml
           parameters: '{"run_smoketest": true}'
