@@ -20,13 +20,10 @@ workflows:
           base-revision: main
           config-path: .circleci/runner_brew_test.yml
           mapping: |
-            Casks/circleci-runner\.rb run_tests true
-      - path-filtering/filter:
-          name: filter-cli-tests
-          base-revision: main
-          config-path: .circleci/cli_brew_test.yml
-          mapping: |
-            Casks/circleci@next\.rb run_cli_tests true
+            # Runner cask changes -> runner_brew_test.yml (workflows: build, smoketest)
+            Casks/circleci-runner\.rb run_tests true .circleci/runner_brew_test.yml
+            # CLI cask changes -> cli_brew_test.yml (workflow: cli-install-test)
+            Casks/circleci@next\.rb run_cli_tests true .circleci/cli_brew_test.yml
 
   smoketest-continue:
     when: << pipeline.parameters.trigger_smoketest >>
