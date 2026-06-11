@@ -20,6 +20,12 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Uninstall existing CircleCI CLI
+          command: |
+            brew uninstall --cask circleci --force || true
+            brew uninstall circleci-cli --force || true
+            brew cleanup circleci circleci-cli || true
+      - run:
           name: Install circleci@next cask
           command: |
             brew install --cask Casks/circleci@next.rb
