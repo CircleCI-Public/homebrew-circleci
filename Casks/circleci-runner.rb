@@ -1,14 +1,14 @@
 cask "circleci-runner" do
 
-  version "3.1.13"
+  version "3.1.14"
   name "circleci-runner"
   desc "The self-hosted runner agent for CircleCI"
   homepage "https://circleci.com/docs/2.0/runner-overview/"
 
-  intelSHA = "e1ae42f98b43b7b33d9ace95017ec2cc88f2585089a8fe5d2d01912c01346636"
-  armSHA = "5ad63805ac0334992f47e56f775b83bce2534ee71bca05c0a7d131d3f7c0b2aa"
-  
-  if Hardware::CPU.intel? 
+  intelSHA = "1aa3347a5e46b7f97b57fcbd5b4b0baa54b1cdf62106cf41227b12b3ed990ac4"
+  armSHA = "6d16237f71bacc658c7b201adad7cba6b2a8b01f8e1cc59231a0fbf2f0ba9fe6"
+
+  if Hardware::CPU.intel?
     sha256 "#{intelSHA}"
     url "https://circleci-binary-releases.s3.amazonaws.com/circleci-runner/#{version}/circleci-runner_darwin_amd64.tar.gz"
     binary "circleci-runner"
@@ -95,7 +95,7 @@ cask "circleci-runner" do
 </plist>"
 
     File.open(plistFile, "w"){|f|f.write "#{plist}"}
-    
+
     end
   end
 
@@ -115,7 +115,7 @@ api:
   end
 
 
-  def caveats;  
+  def caveats;
     "Logs: #{Dir.home}/Library/Logs/com.circleci.runner
 Config: #{Dir.home}/Library/Preferences/com.circleci.runner/config.yaml
 Documentation: https://circleci.com/docs/runner-overview/
@@ -130,7 +130,7 @@ Before Running:
   Enable and Start the CircleCI Runner LaunchAgent with `$ PLIST=#{Dir.home}/Library/LaunchAgents/com.circleci.runner.plist launchctl load $PLIST || (launchctl unload $PLIST && launchctl load $PLIST)`
   Start CircleCI Runner manually with `$ circleci-runner machine --config #{Dir.home}/Library/Preferences/com.circleci.runner/config.yaml`
   View the CircleCI Runner logs at #{Dir.home}/Library/Logs/com.circleci.runner/runner.log"
-  
+
   end
 
   zap trash:[
